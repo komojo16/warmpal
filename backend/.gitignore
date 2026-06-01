@@ -1,0 +1,44 @@
+# 환경변수 (민감정보)
+.env
+.env.local
+.env.production
+
+# Firebase 인증 정보 (절대 업로드 금지)
+firebase-credentials.json
+*credentials*.json
+*service-account*.json
+
+# Python 가상환경
+venv/
+env/
+.venv/
+ENV/
+
+# Python 캐시
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+
+# Python 패키지 빌드
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE 설정
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# 로그 파일
+*.log
+logs/
+
+# 테스트 캐시
+.pytest_cache/
+.coverage
+htmlcov/

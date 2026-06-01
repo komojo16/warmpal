@@ -1,0 +1,37 @@
+# 환경변수 (민감정보 절대 업로드 금지)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Next.js 빌드 결과물
+.next/
+out/
+
+# Node.js 의존성 (용량 크고 설치로 복원 가능)
+node_modules/
+
+# 패키지 매니저 디버그 로그
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS 생성 파일
+.DS_Store
+Thumbs.db
+
+# IDE 설정
+.vscode/
+.idea/
+
+# 타입스크립트 빌드 캐시
+*.tsbuildinfo
+
+# 테스트 커버리지
+coverage/
+.nyc_output/
+
+# Vercel 배포 설정 (필요 시 직접 추가)
+.vercel
