@@ -54,6 +54,7 @@ export interface ConversationLog {
   date: string;
   messages: Message[];
   daily_emotion: EmotionLabel | null;
+  summary?: string | null;
 }
 
 export interface DailyEmotionPoint {

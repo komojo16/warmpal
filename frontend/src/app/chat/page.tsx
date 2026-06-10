@@ -303,7 +303,7 @@ function ChatContent() {
         ].map((item) => (
           <button
             key={item.label}
-            onClick={() => item.hobbyType ? handleHobby(item.hobbyType) : handleSend(item.msg)}
+            onClick={() => handleHobby(item.hobbyType)}
             disabled={loading}
             className="flex-shrink-0 bg-white text-gray-700 text-xs px-3 py-1.5 rounded-full mb-2 disabled:opacity-40"
           >
