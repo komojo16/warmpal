@@ -30,3 +30,8 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Claude / 내부 문서 (비공개)
+.claude/
+CLAUDE.md
+DEPLOY.md
