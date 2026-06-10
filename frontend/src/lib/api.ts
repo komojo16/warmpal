@@ -127,3 +127,16 @@ export async function getHobbyContent(elderly_id: string): Promise<HobbyContent>
   const res = await api.post<HobbyContent>(`/chat/hobby/${elderly_id}`);
   return res.data;
 }
+
+export interface KakaoLink {
+  connect_code: string;
+  channel_public_id: string;
+  add_url: string;
+  chat_url: string;
+  linked: boolean;
+}
+
+export async function getKakaoLink(elderly_id: string): Promise<KakaoLink> {
+  const res = await api.get<KakaoLink>(`/users/elderly/${elderly_id}/kakao-link`);
+  return res.data;
+}

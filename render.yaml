@@ -1,0 +1,41 @@
+# Render Blueprint — warmpal 백엔드(FastAPI + APScheduler)
+# 사용법: Render 대시보드 → New → Blueprint → 이 저장소 선택 → 아래 secret 값 입력
+# 문서: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: warmpal-backend
+    runtime: python
+    rootDir: backend
+    plan: free                       # 무료 티어(15분 미사용 시 슬립, 요청 오면 깨어남)
+    region: singapore                # 한국에서 가장 가까운 리전
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true                 # git push 시 자동 재배포
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      # ── 아래는 대시보드에서 직접 입력하는 비밀값 (sync:false → 블루프린트에 저장 안 됨) ──
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CREDENTIALS_JSON   # firebase-credentials.json 파일 "내용 전체"를 한 줄로 붙여넣기
+        sync: false
+      - key: FRONTEND_URL                # Vercel 배포 후 받은 프론트 주소 (예: https://warmpal.vercel.app)
+        sync: false
+      - key: APP_BASE_URL                # 이 백엔드 자신의 주소 (예: https://warmpal-backend.onrender.com)
+        sync: false
+      - key: KAKAO_CHANNEL_PUBLIC_ID
+        sync: false
+      - key: KAKAO_BOT_SECRET
+        sync: false
+      # ── 자동 생성 / 기본값 ──
+      - key: APP_SECRET_KEY
+        generateValue: true           # Render 가 안전한 랜덤 키 생성 (JWT 서명용)
+      - key: DAILY_MESSAGE_HOUR
+        value: "9"
+      - key: DAILY_MESSAGE_MINUTE
+        value: "0"
+      - key: REMINDER_CHECK_INTERVAL_MINUTES
+        value: "30"

@@ -37,7 +37,7 @@ export default function HomePage() {
       {/* 헤더 */}
       <div className="text-center mb-10">
         <div className="text-5xl mb-3">🌞</div>
-        <h1 className="text-3xl font-bold text-warm-600">따뜻한하루</h1>
+        <h1 className="text-3xl font-bold text-warm-600">warmpal</h1>
         <p className="text-gray-500 mt-2 text-sm">문자 한 통으로 가족이 되는 AI 케어 서비스</p>
       </div>
 

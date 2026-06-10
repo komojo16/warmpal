@@ -62,7 +62,7 @@ def get_history(elderly_id: str, date: str = None):
     conv = get_conversation(elderly_id, target_date)
     elderly = get_elderly_by_id(elderly_id)
     profile = {
-        "ai_display_name": (elderly or {}).get("ai_display_name", "따뜻한하루"),
+        "ai_display_name": (elderly or {}).get("ai_display_name", "warmpal"),
         "ai_avatar": (elderly or {}).get("ai_avatar", "💛"),
     }
     if not conv:

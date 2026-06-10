@@ -100,6 +100,26 @@ def get_elderly(elderly_id: str, family: dict = Depends(get_current_family)):
     return elderly
 
 
+@router.get("/elderly/{elderly_id}/kakao-link", response_model=dict)
+def get_kakao_link(elderly_id: str, family: dict = Depends(get_current_family)):
+    """카카오톡 봇 자동연결용 정보(연결코드 + 채널 추가 링크) 반환"""
+    elderly = db.get_elderly_by_id(elderly_id)
+    if not elderly or elderly.get("family_id") != family["id"]:
+        raise HTTPException(status_code=404, detail="어르신을 찾을 수 없습니다.")
+
+    code = db.get_or_create_connect_code(elderly_id)
+    public_id = os.getenv("KAKAO_CHANNEL_PUBLIC_ID", "").strip()
+    add_url = f"http://pf.kakao.com/{public_id}" if public_id else ""
+    chat_url = f"http://pf.kakao.com/{public_id}/chat" if public_id else ""
+    return {
+        "connect_code": code,
+        "channel_public_id": public_id,
+        "add_url": add_url,
+        "chat_url": chat_url,
+        "linked": bool(elderly.get("kakao_user_id")),
+    }
+
+
 @router.patch("/elderly/{elderly_id}")
 def update_elderly(elderly_id: str, body: ElderlyUpdate, family: dict = Depends(get_current_family)):
     elderly = db.get_elderly_by_id(elderly_id)

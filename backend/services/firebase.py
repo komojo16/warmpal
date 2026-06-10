@@ -13,8 +13,15 @@ logger = logging.getLogger("warmpal.firebase")
 def _init_app() -> None:
     if firebase_admin._apps:
         return
-    cred_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "./firebase-credentials.json")
-    cred = credentials.Certificate(cred_path)
+    # 클라우드(Render 등): 서비스계정 JSON 전체를 환경변수로 주입 → 파일 대신 dict 로 인증
+    # 로컬: FIREBASE_CREDENTIALS_PATH 파일 사용 (기본값 ./firebase-credentials.json)
+    cred_json = os.getenv("FIREBASE_CREDENTIALS_JSON")
+    if cred_json:
+        import json
+        cred = credentials.Certificate(json.loads(cred_json))
+    else:
+        cred_path = os.getenv("FIREBASE_CREDENTIALS_PATH", "./firebase-credentials.json")
+        cred = credentials.Certificate(cred_path)
     firebase_admin.initialize_app(cred, {
         "projectId": os.getenv("FIREBASE_PROJECT_ID"),
     })
@@ -65,6 +72,48 @@ def get_elderly_by_phone(phone: str) -> dict | None:
         .get()
     )
     return doc_to_dict(docs[0]) if docs else None
+
+
+def get_elderly_by_kakao_id(kakao_user_id: str) -> dict | None:
+    db = get_db()
+    docs = (
+        db.collection("elderly")
+        .where(filter=FieldFilter("kakao_user_id", "==", kakao_user_id))
+        .limit(1)
+        .get()
+    )
+    return doc_to_dict(docs[0]) if docs else None
+
+
+def get_elderly_by_connect_code(code: str) -> dict | None:
+    db = get_db()
+    docs = (
+        db.collection("elderly")
+        .where(filter=FieldFilter("kakao_connect_code", "==", code))
+        .limit(1)
+        .get()
+    )
+    return doc_to_dict(docs[0]) if docs else None
+
+
+def get_or_create_connect_code(elderly_id: str) -> str:
+    """어르신의 카카오 자동연결 코드를 반환(없으면 고유한 6자리 코드 생성·저장)"""
+    import random
+    elderly = get_elderly_by_id(elderly_id)
+    if not elderly:
+        return ""
+    code = elderly.get("kakao_connect_code")
+    if code:
+        return code
+    for _ in range(30):
+        candidate = f"{random.randint(0, 999999):06d}"
+        if not get_elderly_by_connect_code(candidate):
+            update_elderly(elderly_id, {"kakao_connect_code": candidate})
+            return candidate
+    # 극히 드문 충돌 — elderly_id 일부로 대체
+    candidate = elderly_id[:6]
+    update_elderly(elderly_id, {"kakao_connect_code": candidate})
+    return candidate
 
 
 def get_elderly_by_family(family_id: str) -> list[dict]:

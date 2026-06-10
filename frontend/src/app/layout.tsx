@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "따뜻한하루",
+  title: "warmpal",
   description: "문자로 가족이 되는 AI 케어 서비스",
   manifest: "/manifest.json",
   themeColor: "#ff5a1f",
@@ -13,10 +13,10 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "따뜻한하루",
+    title: "warmpal",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/warmpal-icon-1024.png",
     apple: "/icons/icon-192x192.png",
   },
 };

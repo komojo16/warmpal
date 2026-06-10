@@ -11,19 +11,48 @@
 
 body {
   font-family: 'Noto Sans KR', sans-serif;
+  /* 단색 크림 대신 아주 옅은 따뜻한 그라데이션으로 깊이감 */
   background-color: var(--color-warm-light);
+  background-image:
+    radial-gradient(1200px 600px at 100% -10%, rgba(255, 138, 76, 0.10), transparent 60%),
+    radial-gradient(1000px 500px at -10% 110%, rgba(253, 186, 140, 0.10), transparent 55%);
+  background-attachment: fixed;
   color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-warm-500 hover:bg-warm-600 text-white font-medium px-4 py-2 rounded-lg transition-colors;
+    @apply inline-flex items-center justify-center gap-2 bg-gradient-to-b from-warm-400 to-warm-500
+           hover:from-warm-500 hover:to-warm-600 text-white font-semibold px-4 py-2 rounded-xl
+           shadow-btn transition-all duration-150 active:scale-[0.98]
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-warm-300 focus-visible:ring-offset-2
+           disabled:opacity-60 disabled:active:scale-100;
   }
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-gray-700 font-medium px-4 py-2 rounded-lg border border-gray-200 transition-colors;
+    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-warm-50 text-gray-700
+           font-medium px-4 py-2 rounded-xl border border-gray-200 hover:border-warm-200
+           shadow-sm transition-all duration-150 active:scale-[0.98]
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-warm-200 focus-visible:ring-offset-2;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 text-warm-600 hover:bg-warm-50
+           font-medium px-3 py-2 rounded-xl transition-colors;
   }
   .card {
-    @apply bg-white rounded-2xl shadow-sm p-6;
+    @apply bg-white/95 backdrop-blur-[2px] rounded-2xl border border-warm-100/70 shadow-card
+           p-6 transition-shadow duration-200;
+  }
+  /* 상호작용 가능한 카드(클릭/호버 강조)에 추가로 붙이는 클래스 */
+  .card-interactive {
+    @apply hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200 cursor-pointer;
+  }
+  /* 공통 입력 필드 스타일 */
+  .input {
+    @apply w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm text-gray-800
+           placeholder:text-gray-400 transition-colors
+           focus:outline-none focus:border-warm-400 focus:ring-2 focus:ring-warm-200;
   }
   .badge-positive  { @apply bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium; }
   .badge-neutral   { @apply bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-medium; }

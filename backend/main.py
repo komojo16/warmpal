@@ -1,4 +1,4 @@
-"""따뜻한하루 — FastAPI 백엔드 진입점"""
+"""warmpal — FastAPI 백엔드 진입점"""
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -14,7 +14,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
-from routers import chat, users, dashboard, health as health_router
+from routers import chat, users, dashboard, health as health_router, kakao
 
 # ── 로깅 설정 ──────────────────────────────────────────────────────────────────
 
@@ -36,7 +36,7 @@ scheduler = AsyncIOScheduler(timezone="Asia/Seoul")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("따뜻한하루 서버 시작")
+    logger.info("warmpal 서버 시작")
     scheduler.add_job(
         health_router.run_morning_messages,
         "cron",
@@ -76,14 +76,14 @@ async def lifespan(app: FastAPI):
     )
     scheduler.start()
     yield
-    logger.info("따뜻한하루 서버 종료")
+    logger.info("warmpal 서버 종료")
     scheduler.shutdown()
 
 
 # ── 앱 설정 ───────────────────────────────────────────────────────────────────
 
 app = FastAPI(
-    title="따뜻한하루 API",
+    title="warmpal API",
     description="문자로 가족이 되는 AI 케어 서비스",
     version="1.0.0",
     lifespan=lifespan,
@@ -101,7 +101,8 @@ _cors_origins = list({
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,
-    allow_origin_regex=r"http://\d+\.\d+\.\d+\.\d+:\d+",  # LAN IP 접속 허용
+    # LAN IP 접속 + Vercel 배포 도메인(프로덕션/프리뷰 *.vercel.app) 허용
+    allow_origin_regex=r"(http://\d+\.\d+\.\d+\.\d+:\d+|https://.*\.vercel\.app)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -141,11 +142,12 @@ app.include_router(chat.router)
 app.include_router(users.router)
 app.include_router(dashboard.router)
 app.include_router(health_router.router)
+app.include_router(kakao.router)
 
 
 @app.get("/")
 def root():
-    return {"service": "따뜻한하루", "status": "running"}
+    return {"service": "warmpal", "status": "running"}
 
 
 @app.get("/health")

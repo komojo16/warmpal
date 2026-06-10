@@ -1,6 +1,6 @@
 {
-  "name": "따뜻한하루",
-  "short_name": "따뜻한하루",
+  "name": "warmpal",
+  "short_name": "warmpal",
   "description": "문자로 가족이 되는 AI 케어 서비스",
   "start_url": "/",
   "display": "standalone",
@@ -15,6 +15,7 @@
     { "src": "/icons/icon-152x152.png", "sizes": "152x152", "type": "image/png" },
     { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png" },
-    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/warmpal-icon-1024.png", "sizes": "1024x1024", "type": "image/png" }
   ]
 }

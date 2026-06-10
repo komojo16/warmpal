@@ -19,7 +19,7 @@ function ChatContent() {
   const [loading, setLoading] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [bigFont, setBigFont] = useState(false);
-  const [aiName, setAiName] = useState("따뜻한하루");
+  const [aiName, setAiName] = useState("warmpal");
   const [aiAvatar, setAiAvatar] = useState("💛");
   const [hasNewMessage, setHasNewMessage] = useState(false); // 새 메시지 배지
   const bottomRef = useRef<HTMLDivElement>(null);

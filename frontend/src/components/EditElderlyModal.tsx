@@ -18,7 +18,7 @@ export default function EditElderlyModal({ elderly, onClose, onSuccess }: Props)
   const [nickname, setNickname] = useState(elderly.nickname ?? "어르신");
   const [aiPersona, setAiPersona] = useState((elderly as any).ai_persona ?? "케어 도우미");
   const [gender, setGender] = useState((elderly as any).gender ?? "여성");
-  const [aiDisplayName, setAiDisplayName] = useState((elderly as any).ai_display_name ?? "따뜻한하루");
+  const [aiDisplayName, setAiDisplayName] = useState((elderly as any).ai_display_name ?? "warmpal");
   const [aiAvatar, setAiAvatar] = useState((elderly as any).ai_avatar ?? "💛");
   const [friendName, setFriendName] = useState((elderly as any).friend_name ?? "");
   const [proactiveEnabled, setProactiveEnabled] = useState((elderly as any).proactive_enabled ?? true);
@@ -69,7 +69,7 @@ export default function EditElderlyModal({ elderly, onClose, onSuccess }: Props)
         health_conditions: conditions,
         ai_persona: aiPersona,
         gender,
-        ai_display_name: aiDisplayName.trim() || "따뜻한하루",
+        ai_display_name: aiDisplayName.trim() || "warmpal",
         ai_avatar: aiAvatar,
         friend_name: friendName.trim(),
         proactive_enabled: proactiveEnabled,
@@ -110,7 +110,7 @@ export default function EditElderlyModal({ elderly, onClose, onSuccess }: Props)
                   type="text"
                   value={aiDisplayName}
                   onChange={(e) => setAiDisplayName(e.target.value)}
-                  placeholder="따뜻한하루"
+                  placeholder="warmpal"
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-warm-300"
                 />
               </div>
@@ -136,7 +136,7 @@ export default function EditElderlyModal({ elderly, onClose, onSuccess }: Props)
                   {aiAvatar}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{aiDisplayName || "따뜻한하루"}</p>
+                  <p className="text-sm font-semibold text-white">{aiDisplayName || "warmpal"}</p>
                   <p className="text-xs text-white/70">AI 케어 서비스</p>
                 </div>
               </div>

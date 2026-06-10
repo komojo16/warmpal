@@ -6,8 +6,8 @@ import { Bell, Plus, LogOut, ChevronRight, Activity, MessageSquare, Heart, Trash
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 
-import api from "@/lib/api";
-import type { Elderly, DashboardSummary, Alert, ConversationLog } from "@/lib/api";
+import api, { getKakaoLink } from "@/lib/api";
+import type { Elderly, DashboardSummary, Alert, ConversationLog, KakaoLink } from "@/lib/api";
 import EmotionChart from "@/components/EmotionChart";
 import HealthTrendChart from "@/components/HealthTrendChart";
 import ConversationLogView from "@/components/ConversationLog";
@@ -40,6 +40,7 @@ export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"emotion" | "health" | "conversation">("emotion");
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [kakaoLink, setKakaoLink] = useState<KakaoLink | null>(null);
 
   const loadElderlyList = useCallback(async () => {
     try {
@@ -95,6 +96,11 @@ export default function DashboardPage() {
     }
   }, [selectedId, selectedDate]);
 
+  useEffect(() => {
+    if (!selectedId) { setKakaoLink(null); return; }
+    getKakaoLink(selectedId).then(setKakaoLink).catch(() => setKakaoLink(null));
+  }, [selectedId]);
+
   // 5분마다 자동 갱신
   useEffect(() => {
     if (!selectedId) return;
@@ -144,7 +150,7 @@ export default function DashboardPage() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xl">🌞</span>
-            <span className="font-bold text-warm-600 text-lg">따뜻한하루</span>
+            <span className="font-bold text-warm-600 text-lg">warmpal</span>
           </div>
           <div className="flex items-center gap-3">
             {selectedId && (
@@ -442,6 +448,84 @@ export default function DashboardPage() {
                       복사
                     </button>
                   </div>
+                </div>
+
+                {/* 카카오톡 봇 연결 */}
+                <div className="card">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-semibold text-gray-700">💬 카카오톡으로 연결</h3>
+                    {kakaoLink?.linked ? (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-600">연결됨 ✓</span>
+                    ) : (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">미연결</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400 mb-3">
+                    어르신께 아래 안내를 전달하세요. 채널을 추가하고 연결번호만 한 번 보내면
+                    봇이 어르신을 알아보고 먼저 인사해요. (어르신은 전화번호 입력 불필요)
+                  </p>
+
+                  {kakaoLink ? (
+                    <>
+                      {/* 연결번호 */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-xs text-gray-500">연결번호</span>
+                        <span className="text-2xl font-bold tracking-widest text-warm-600">
+                          {kakaoLink.connect_code || "------"}
+                        </span>
+                      </div>
+
+                      {kakaoLink.add_url ? (
+                        <div className="flex items-start gap-3">
+                          <img
+                            alt="카카오 채널 추가 QR"
+                            className="w-24 h-24 rounded-lg border border-gray-200"
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
+                              kakaoLink.add_url
+                            )}`}
+                          />
+                          <div className="flex-1 space-y-2">
+                            <div className="flex items-center gap-2">
+                              <input
+                                readOnly
+                                value={kakaoLink.add_url}
+                                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-600 bg-gray-50 outline-none"
+                              />
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(kakaoLink.add_url);
+                                  toast.success("채널 링크를 복사했습니다!");
+                                }}
+                                className="btn-primary text-sm whitespace-nowrap"
+                              >
+                                복사
+                              </button>
+                            </div>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(
+                                  `warmpal AI 친구를 만나보세요 💛\n` +
+                                    `1) 이 링크로 채널을 추가하세요: ${kakaoLink.add_url}\n` +
+                                    `2) 채팅창에 연결번호 ${kakaoLink.connect_code} 를 보내면 끝이에요!`
+                                );
+                                toast.success("안내 문구를 복사했습니다!");
+                              }}
+                              className="w-full text-sm border border-warm-200 text-warm-600 rounded-lg py-2 hover:bg-warm-50"
+                            >
+                              📋 어르신께 보낼 안내 문구 복사
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-amber-600 bg-amber-50 rounded-lg px-3 py-2">
+                          채널 링크를 만들려면 백엔드 <code>.env</code> 의{" "}
+                          <code>KAKAO_CHANNEL_PUBLIC_ID</code> 를 설정하세요. (연결번호는 위 값을 사용)
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-xs text-gray-400">연결 정보를 불러오는 중…</p>
+                  )}
                 </div>
               </>
             )}

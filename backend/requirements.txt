@@ -14,7 +14,9 @@ langchain-community==0.2.1
 firebase-admin==6.5.0
 
 # Sentiment Analysis
-transformers==4.41.1
+# transformers 모델은 선택사항. 미설치 시 sentiment.py 가 자동으로 키워드 분석으로 폴백한다.
+# 클라우드 무료 티어에서는 빌드 용량·시간 때문에 기본 비활성. 모델 정확도가 필요하면 아래 3줄 주석 해제.
+# transformers==4.41.1
 # torch==2.3.0
 # sentencepiece==0.2.0
 
